@@ -1,7 +1,7 @@
 from collections import Counter
 import heapq as hq
 
-class LCArrays:
+class CArrays:
    
     def containsDuplicate(self, nums: list[int]) -> bool:
         hashmap = Counter(nums)
