@@ -127,7 +127,7 @@ class CStack:
             
             stk.append(tuple([start_indx,h]))
             
-        for i,h in enumerate(stk):
+        for i,h in stk:
             curr_area = h[1] * (len(heights) - i)
             MaxArea = max(MaxArea, curr_area)
             
