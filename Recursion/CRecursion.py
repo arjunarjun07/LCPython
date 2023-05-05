@@ -128,16 +128,54 @@ class CRecursion:
         ans = ''.join(map(str, binary_str))
                
         return ans
+    
+    """
+        isprime()
+        
+        f(n) = 
+                {
+                    false    ;       n <= 1
+                    false    ;       n % divisor == 0 & i !=1
+                    
+                    true     ;       i == 1
+                    f(num, divisor+1)   ;   i > 1 
+                }
+    """
+    
+    def IsPrime(self, num:int) -> bool:
+        
+        i = num - 1
+        
+        def FindPrime(num, i:int):
+            if num <= 1 or (i != 1 and num % i == 0):
+                return False
+
+            if i == 1:
+                return True
+            else:
+                return FindPrime(num, i-1)
+        
+    def GCD(self, a:int, b:int)-> int:
+        #Euclidian subraction
+        
+        # Everything divides 0
+        if (a == 0):
+            return b
+        if (b == 0):
+            return a
+
+        # base case
+        if (a == b):
+            return a
+
+        # a is greater
+        if (a > b):
+            return self.GCD(a-b, b)
+        return self.GCD(a, b-a)
+      
  
 c = CRecursion()
-print(c.convert_binary(99))
+print(c.GCD(15, 13))
 
-# void convertbinary(int num);
 # bool IsPrime(int num, int divisor);
-
-# void print_arr(int a[], int n);
-
 # int GCD(int a, int b);
-# void reverse(string& str, int l, int h);
-
-# bool CheckPallindrome(string& str, int start_i, int end_i);
