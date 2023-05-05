@@ -172,10 +172,17 @@ class CRecursion:
         if (a > b):
             return self.GCD(a-b, b)
         return self.GCD(a, b-a)
-      
+    
+    def gcd(self, a,b):
+     
+        # Everything divides 0
+        if (b == 0):
+            return a
+        return self.gcd(b, a%b)
+        
  
 c = CRecursion()
-print(c.GCD(15, 13))
+print(c.gcd(98, 56))
 
 # bool IsPrime(int num, int divisor);
 # int GCD(int a, int b);
