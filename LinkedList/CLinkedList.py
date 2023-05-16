@@ -386,7 +386,67 @@ class Solution:
                 indx += 1
             else:
                 return each_elem
-        return -1        
+        return -1
+    
+    def mergeKLists(self, lists: list[ListNode]) -> ListNode:
+        
+        if lists.__len__() == 0:
+            return None
+        
+        if lists.__len__() == 1:
+            return lists[0]
+        
+        while len(lists) > 1:
+            
+            mergedlist = []
+            
+            for i in range(0, len(lists), 2):
+                
+                #we need to merge the k sorted list using 2-way merge
+                #on each pass we use 2 lists
+                l1 = lists[i]
+                l2 = lists[i+1] if i+1 < len(lists) else None
+                
+                mergedlist.append(self.mergeTwoLists(l1, l2))
+            
+            lists = mergedlist
+            
+        return lists[0]
+    
+    def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
+        
+        if head is None:
+            return None
+        
+        dummyN = ListNode(0, head)
+        
+        i = 1
+        currN = head
+        nxtN = currN.next
+        prevN = dummyN
+        
+        while currN:
+            
+            if i == k:
+                
+                i = 0
+                
+                _1stnodeoflistBeforeRev = prevN.next
+                currN.next = None
+                
+                temp = self.reverseList(_1stnodeoflistBeforeRev)
+                
+                _1stnodeoflistBeforeRev.next = nxtN
+                prevN.next = temp
+                prevN = _1stnodeoflistBeforeRev
+            
+            i += 1            
+            currN = nxtN
+            
+            if currN:
+                nxtN = currN.next
+            
+        return head         
                     
 s = Solution()
 
@@ -521,14 +581,62 @@ class DLL:
             
             curr = curr.next    
     
+class NodeDLL:
+    def __init__(self, key, val):
+        self.key, self.val = key, val
+        self.prev = self.next = None
+
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = {}  # map key to node
+
+        self.left, self.right = NodeDLL(0, 0), NodeDLL(0, 0)
+        self.left.next, self.right.prev = self.right, self.left
+
+    # remove node from list
+    def remove(self, node):
+        prev, nxt = node.prev, node.next
+        prev.next, nxt.prev = nxt, prev
+
+    # insert node at right
+    def insert(self, node):
+        prev, nxt = self.right.prev, self.right
+        prev.next = nxt.prev = node
+        node.next, node.prev = nxt, prev
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            self.remove(self.cache[key])
+            self.insert(self.cache[key])
+            return self.cache[key].val
+        return -1
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.remove(self.cache[key])
+        self.cache[key] = NodeDLL(key, value)
+        self.insert(self.cache[key])
+
+        if len(self.cache) > self.cap:
+            # remove from the list and delete the LRU from hashmap
+            lru = self.left.next
+            self.remove(lru)
+            del self.cache[lru.key]
             
-dll = DLL()
+s = Solution()
 
+n1 = ListNode(1)
+n2 = ListNode(2)
+n3 = ListNode(3)
+n4 = ListNode(4)
+n5 = ListNode(5)
 
-dll.InsertEnd(3)
-dll.InsertEnd(4)
-dll.InsertEnd(5)
+n1.next = n2
+n2.next = n3
+n3.next = n4
+n4.next = n5
 
-dll.DelMiddle(4)
-
-print(dll)
+val = s.reverseKGroup(n1, 2)
+print(val)
