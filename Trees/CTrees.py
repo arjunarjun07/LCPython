@@ -188,35 +188,87 @@ class Solution:
             
             if node.right:
                 queue.append(node.right)
-
+    
+    def rightSideView(self, root: TreeNode) -> int:
         
-    def levelOrder(self, root: TreeNode) -> list[list[int]]:
+        rightview = []
         
-        res = []
+        if root == None:
+            return res
         
-        def level(root, level):
-                
+        res = self.levelOrder(root)
+        
+        for i in range(len(res)):
+            rightview.append(res[i][-1])
+            
+        return rightview
+    
+    def goodNodes(self, root: TreeNode) -> int:
+        
+        def DFSCount(root, maxval):
+            
             if root == None:
-                return
+                return 0
             
-            if len(res) == level:
-                res.append([])
+            res = 1 if root.val >= maxval else 0
+            maxval = max(maxval, root.val)
             
-            res[level].append(root.val)
+            res += DFSCount(root.left, maxval)
+            res += DFSCount(root.right, maxval)
             
-            level(root.left, level+1)
-            level(root.right, level+1)    
+            return res
+        
+        return DFSCount(root, root.val)
+                        
+    def isValidBST(self, root: TreeNode) -> bool:
+        def checkBST(root, minval, maxval):               
             
-        level(root, 0)
+            if root == None:
+                return True
+            
+            if not (root.val < maxval and root.val > minval):
+                return False
+            
+            return checkBST(root.left, minval, root.val) and checkBST(root.right, root.val, maxval)                
+        
+        return checkBST(root, float('-inf'), float('inf'))
+    
+    def kthSmallest(self, root: TreeNode, k: int) -> int:
+        
+        res = 0
+        counter = 0
+        
+        def Inorder(root, k):
+            nonlocal counter
+            
+            if root:
+                Inorder(root.left, k)
+                
+                counter += 1
+                print(counter)
+                
+                if k == counter:
+                    res = root.val
+                
+                Inorder(root.right, k)
+                
+        Inorder(root, k)
         return res
     
-s = Solution()
-root = TreeNode(4)
-root.left = TreeNode(2)
-root.right = TreeNode(7)
-root.left.left = TreeNode(1)
-root.left.right = TreeNode(3)
-root.right.left = TreeNode(6)
-root.right.right = TreeNode(9)
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        
+        
+             
 
-print(s.diameterOfBinaryTree(root))
+s = Solution()
+root = TreeNode(5)
+root.left = TreeNode(3)
+
+root.left.left = TreeNode(2)
+root.left.left.left = TreeNode(1)
+
+root.left.right = TreeNode(4)
+
+root.right = TreeNode(6)
+
+print(s.lowestCommonAncestor(root, root.left, root.right))
